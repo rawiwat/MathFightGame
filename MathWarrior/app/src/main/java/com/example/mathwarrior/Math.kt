@@ -67,8 +67,8 @@ fun generateWrongChoice(answer: Int): Int {
 
 fun evaluateExpression(expression: List<String>): Int {
     val operators = setOf(" + ", " - ", " × ", " ÷ ")
-    val stack = mutableListOf<Int>()
-    var currentOperator = " + " // Initialize with addition to handle the first number
+    val answer = mutableListOf<Int>()
+    var currentOperator = " + " // start with plut to handle the first number
 
     for (element in expression) {
         if (element in operators) {
@@ -76,13 +76,13 @@ fun evaluateExpression(expression: List<String>): Int {
         } else {
             val num = element.removeSurrounding("(", ")").toInt()
             when (currentOperator) {
-                " + " -> stack.add(num)
-                " - " -> stack.add(-num)
-                " × " -> stack[stack.lastIndex] *= num
-                " ÷ " -> stack[stack.lastIndex] /= num
+                " + " -> answer.add(num)
+                " - " -> answer.add(-num)
+                " × " -> answer[answer.lastIndex] *= num
+                " ÷ " -> answer[answer.lastIndex] /= num
             }
         }
     }
 
-    return stack.sum()
+    return answer.sum()
 }
