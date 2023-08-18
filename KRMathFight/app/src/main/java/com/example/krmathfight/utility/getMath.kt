@@ -48,26 +48,25 @@ fun getProblem(): Problem {
 }
 
 fun generateWrongChoice(answer: Int): Int {
-    return if (answer <= 100 && answer >= -100) {
-        Random.nextInt(-100,100)
-    } else {
-        val lowerBound = (answer * 0.8).toInt()
-        val upperBound = (answer * 1.2).toInt()
-
-        if (lowerBound < upperBound) {
-            var wrongChoice = Random.nextInt(lowerBound, upperBound)
-            while (wrongChoice == answer) {
-                wrongChoice = Random.nextInt(lowerBound, upperBound)
-            }
-            wrongChoice
-        } else {
-            var wrongChoice = Random.nextInt(upperBound, lowerBound)
-            while (wrongChoice == answer) {
-                wrongChoice = Random.nextInt(upperBound, lowerBound)
-            }
-            wrongChoice
-        }
+    if (answer == 0) {
+        return Random.nextInt(-100, 100)
     }
+
+    val lowerBound = (answer * 0.8).toInt()
+    val upperBound = (answer * 1.2).toInt()
+
+    if (lowerBound <= -100 || upperBound >= 100) {
+        return Random.nextInt(-100, 100)
+    }
+
+    val wrongChoice: Int = if (lowerBound < upperBound) {
+        Random.nextInt(lowerBound, upperBound)
+    } else if (lowerBound > upperBound) {
+        Random.nextInt(upperBound, lowerBound)
+    } else {
+        Random.nextInt(-100, 100)
+    }
+    return wrongChoice
 }
 
 

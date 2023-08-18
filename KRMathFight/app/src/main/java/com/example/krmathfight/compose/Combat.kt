@@ -34,6 +34,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
@@ -41,14 +42,18 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
+import com.example.krmathfight.CharacterModel.Enemy
+import com.example.krmathfight.CharacterModel.KamenRider
 import com.example.krmathfight.R
 import com.example.krmathfight.viewModel.CombatViewModel
 import com.example.krmathfight.viewModel.IchigoViewModel
+import com.example.krmathfight.viewModel.KamenRiderViewModel
 
 @Composable
 fun CombatScreen(viewModel: CombatViewModel) {
     val context = LocalContext.current
-    val samplePlayer = IchigoViewModel()
+    val samplePlayerViewModel = IchigoViewModel()
+    val samplePlayer by samplePlayerViewModel.currentKamenRider.collectAsState()
     val sampleEnemy = Enemy(name = "Shocker",R.drawable.ichigo_stance,1,1)
     val currentProblem by viewModel.currentProblem.collectAsState()
     val currentTime by viewModel.currentTime.collectAsState()
@@ -85,14 +90,14 @@ fun CombatScreen(viewModel: CombatViewModel) {
             Image(
                 painter = rememberAsyncImagePainter(
                     ImageRequest.Builder(LocalContext.current)
-                        .data(R.drawable.ichigo_stance)
+                        .data(samplePlayer.imageID)
                         .apply(block = fun ImageRequest.Builder.() {
                             size(500)
                         }).build(),
                     imageLoader = imageLoader),
                 contentDescription = null
             )
-            Button(onClick = {  }) {
+            Button(onClick = { samplePlayer.moveSet[0].function(samplePlayer,context) }) {
                 Text("Punch")
             }
 
@@ -103,7 +108,7 @@ fun CombatScreen(viewModel: CombatViewModel) {
                 choices = choices,
                 answer = currentProblem.answer,
                 context = context,
-                player = samplePlayer,
+                player = samplePlayerViewModel,
                 enemy = sampleEnemy
             )
 
@@ -112,17 +117,13 @@ fun CombatScreen(viewModel: CombatViewModel) {
     }
 }
 
-class Enemy(name: String, ichigoStance: Int, i: Int, i1: Int) {
-
-}
-
 @Composable
 fun MathQuiz(
     text:String,
     choices: List<Int>,
     answer:Int,
     context: Context,
-    player: IchigoViewModel,
+    player: ViewModel,
     enemy: Enemy
 ) {
 
@@ -144,7 +145,7 @@ fun MathQuiz(
 }
 
 @Composable
-fun Choice(answer:Int,choice:Int,context: Context,player: IchigoViewModel, enemy:Enemy) {
+fun Choice(answer:Int,choice:Int,context: Context,player: ViewModel, enemy:Enemy) {
     Card(
         border = BorderStroke(width = 6.dp, color = Color.Blue),
         modifier = Modifier
@@ -155,13 +156,11 @@ fun Choice(answer:Int,choice:Int,context: Context,player: IchigoViewModel, enemy
                 context.sendBroadcast(intent)
 
                 if (answer == choice) {
-                    player.gainEnergy(1)
                     Toast
                         .makeText(context, "Correct", Toast.LENGTH_SHORT)
                         .show()
                 } else {
                     //get attacked
-                    player.getAttacked(1)
                     Toast
                         .makeText(context, "Wrong", Toast.LENGTH_SHORT)
                         .show()
@@ -210,4 +209,10 @@ fun Timer(currentTime: Float,timerStart:() -> Unit) {
             size = Size(currentWidth, height)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CombatScreenPreview() {
+    CombatScreen(viewModel = CombatViewModel())
 }
