@@ -16,11 +16,17 @@ fun Navigator(
         navController = navController,
         startDestination = "Main"
     ) {
-       composable(route = "Main") {
-           HomeScreen(navController = navController)
-       }
-       composable(route = "Combat") {
-           CombatScreen(viewModel = combatViewModel)
-       }
+        composable(route = "Main") {
+            HomeScreen(navController = navController)
+        }
+        composable(route = "Combat") {
+            CombatScreen(viewModel = combatViewModel)
+        }
+        composable(route = "Selection") {
+            CharacterSelection()
+        }
+        composable(route = "Upgrade") {
+            UpgradeScreen()
+        }
     }
 }

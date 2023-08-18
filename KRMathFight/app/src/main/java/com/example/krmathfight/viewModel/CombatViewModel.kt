@@ -25,7 +25,7 @@ class CombatViewModel : ViewModel() {
     fun startTimer() {
         timerScope.launch {
             while (currentTime.value > 0f) {
-                delay(750L)
+                delay(500L)
                 _currentTime.value -= 1f
             }
             resetTimer()

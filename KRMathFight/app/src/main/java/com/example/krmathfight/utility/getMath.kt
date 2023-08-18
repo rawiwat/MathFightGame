@@ -24,7 +24,7 @@ fun getProblem(): Problem {
     val symbols = listOf(" + "," - "," × "," ÷ ")
     val listOfSymbolsUses = mutableListOf<String>()
     repeat(numberOfNumbers - 1) {
-        listOfSymbolsUses.add(symbols[Random.nextInt(3)])
+        listOfSymbolsUses.add(symbols[Random.nextInt(symbols.size)])
     }
 
     val expression = mutableListOf<String>()
